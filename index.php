@@ -2,7 +2,6 @@
 require_once "inc/cabecalho.php";
 ?>
 
-
 <div class="row my-1 mx-md-n1">
         <!-- INÍCIO Card -->
 		<div class="col-md-6 my-1 px-md-1">
