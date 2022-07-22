@@ -2,5 +2,13 @@
     "require": {
         "twbs/bootstrap": "^5.1",
         "twbs/bootstrap-icons": "^1.9"
+    },
+
+    "autoload" : {
+        "psr-4" : {
+            "Microblog\\" : "src/banco"
+        }
     }
 }
+
+
