@@ -1,5 +1,12 @@
 <?php 
+use Microblog\Usuario;
 require_once "../inc/cabecalho-admin.php";
+$usuario = new Usuario;
+$listaDeUsuario = $usuario->listar();
+echo "<pre>";
+var_dump($listaDeUsuario);
+echo "</pre>";
+
 ?>
 
 
