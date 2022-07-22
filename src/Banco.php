@@ -32,12 +32,12 @@ abstract class Banco {
         );
 
        
-        
+        // echo "Ok!";
        } catch (Exception $erro) {
         die("Deu ruim: ".$erro->getMessage());
        }
        return self::$conexao;
     }
 }
-// Banco::conecta(); Teste
+//  Banco::conecta(); Teste
 ?>
