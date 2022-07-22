@@ -5,7 +5,7 @@ use Microblog\Utilitarios;
 require_once "../inc/cabecalho-admin.php";
 $usuario = new Usuario;
 $listaDeUsuario = $usuario->listar();
-Utilitarios::dump($listaDeUsuario);
+// Utilitarios::dump($listaDeUsuario);
 ?>
 
 
@@ -13,7 +13,7 @@ Utilitarios::dump($listaDeUsuario);
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 		
 		<h2 class="text-center">
-		Usuários <span class="badge bg-dark">X</span>
+		Usuários <span class="badge bg-dark"><?=count($listaDeUsuario)?></span>
 		</h2>
 
 		<p class="text-center mt-5">
@@ -36,10 +36,13 @@ Utilitarios::dump($listaDeUsuario);
 
 				<tbody>
 
+        <?php foreach ($listaDeUsuario as $usuario){ ?>
+
+		
 					<tr>
-						<td> Nome... </td>
-						<td> E-mail... </td>
-						<td> Tipo... </td>
+						<td> <?=$usuario['nome']?></td>
+						<td> <?=$usuario['email']?> </td>
+						<td> <?=$usuario['tipo']?></td>
 						<td class="text-center">
 							<a class="btn btn-warning" 
 							href="usuario-atualiza.php">
@@ -52,7 +55,7 @@ Utilitarios::dump($listaDeUsuario);
 							</a>
 						</td>
 					</tr>
-
+		<?php } ?>
 				</tbody>                
 			</table>
 	</div>
