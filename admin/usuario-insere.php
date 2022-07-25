@@ -1,8 +1,19 @@
-<?php 
+<?php
+use Microblog\Usuario;
 require_once "../inc/cabecalho-admin.php";
+
+if(isset($_POST['inserir'] ) ){
+     $usuario = new Usuario;
+	 $usuario->setNome($_POST['nome']);
+	 $usuario->setEmail($_POST['email']);
+	 $usuario->setSenha( $usuario->codificaSenha($_POST['senha']) );
+	 $usuario->setTipo($_POST['tipo']);
+	//  echo $usuario->getSenha(); Teste
+
+	  $usuario->inserir();
+	  header("location:usuarios.php");
+};
 ?>
-
-
 <div class="row">
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 		
