@@ -1,7 +1,7 @@
-<?php 
+<?php
 require_once "../inc/cabecalho-admin.php";
+$sessao->verificaAcessoAdmin();
 ?>
-
 
 <div class="row">
 	<article class="col-12 bg-white rounded shadow my-1 py-4">

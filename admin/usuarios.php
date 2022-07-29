@@ -1,8 +1,9 @@
-<?php 
+<?php
 use Microblog\Usuario;
 use Microblog\Utilitarios;
 require_once "../inc/cabecalho-admin.php";
 $usuario = new Usuario;
+$sessao->verificaAcessoAdmin();
 $listaDeUsuario = $usuario->listar();
 // Utilitarios::dump($listaDeUsuario);
 ?>
@@ -58,7 +59,6 @@ $listaDeUsuario = $usuario->listar();
 		
 	</article>
 </div>
-
 
 <?php 
 require_once "../inc/rodape-admin.php";
