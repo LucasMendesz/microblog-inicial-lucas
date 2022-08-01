@@ -1,8 +1,22 @@
 <?php
+use Microblog\Categoria;
+use Microblog\Utilitarios;
+
 require_once "../inc/cabecalho-admin.php";
 $sessao->verificaAcessoAdmin();
-?>
+$categoria = new Categoria;
+$categoria->setId($_GET['id']);
+$dados = $categoria->listaUm();
+// Utilitarios::dump($dados);
 
+if(isset($_POST['atualizar'])){
+	$categoria->setNome($_POST['nome']);
+
+	$categoria->atualizar();
+	header("location:categorias.php");
+
+}
+?>
 <div class="row">
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 		
