@@ -1,18 +1,26 @@
 <?php
-
 use Microblog\Categoria;
 use Microblog\Noticia;
 use Microblog\Utilitarios;
-
 require_once "../inc/cabecalho-admin.php";
-$noticia = new Noticia;
-// Utilitarios::dump($noticia); TESTE 
 $categoria = new Categoria;
 $listaDeCategoria = $categoria->listar();
 // Utilitarios::dump($listaDeCategoria); TESTE
+if(isset($_POST['inserir'])){
+	$noticia = new Noticia;
+	$noticia->setTitulo($_POST['titulo']);
+	$noticia->setTexto($_POST['texto']);
+	$noticia->setResumo($_POST['resumo']);
+	$noticia->setDestaque($_POST['destaque']);
+	$noticia->setCategoriaId($_POST['categoria']);
+	$noticia->setImagem($_POST['imagem']);
+
+	/* Aplicamos o id do usuario logado na sessão à propriedade id da classe/objeto Usuario*/
+	$noticia->usuario->setId($_SESSION['id']);
+
+	Utilitarios::dump($noticia);
+}
 ?>
-
-
 <div class="row">
 	<article class="col-12 bg-white rounded shadow my-1 py-4">
 

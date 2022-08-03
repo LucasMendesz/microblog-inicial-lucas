@@ -1,7 +1,6 @@
 <?php
 namespace Microblog;
 use PDO, Exception;
-
 final class Noticia {
     private int $id;
     private string $data;
@@ -47,5 +46,84 @@ final class Noticia {
         } catch (Exception $erro) {
             die("Erro ". $erro->getMessage());
         }
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getData(): string
+    {
+        return $this->data;
+    }
+
+    public function getTitulo(): string
+    {
+        return $this->titulo;
+    }
+
+    public function getTexto(): string
+    {
+        return $this->texto;
+    }
+
+    public function getResumo(): string
+    {
+        return $this->resumo;
+    }
+
+    public function getImagem(): string
+    {
+        return $this->imagem;
+    }
+
+    public function getDestaque(): string
+    {
+        return $this->destaque;
+    }
+
+    public function getCategoriaId(): int
+    {
+        return $this->categoriaId;
+    }
+
+    public function setId(int $id)
+    {
+        $this->id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+    }
+
+    public function setData(string $data)
+    {
+        $this->data = filter_var($data, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
+
+    public function setTitulo(string $titulo)
+    {
+        $this->titulo = filter_var($titulo, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
+
+    public function setTexto(string $texto)
+    {
+        $this->texto = filter_var($texto, FILTER_SANITIZE_SPECIAL_CHARS);    }
+
+    public function setResumo(string $resumo)
+    {
+        $this->resumo = filter_var($resumo, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
+
+    public function setImagem(string $imagem)
+    {
+        $this->imagem = filter_var($imagem, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
+
+    public function setDestaque(string $destaque)
+    {
+        $this->destaque = filter_var($destaque, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
+
+    public function setCategoriaId(int $categoriaId)
+    {
+        $this->categoriaId = filter_var($categoriaId, FILTER_SANITIZE_NUMBER_INT);
     }
 }
