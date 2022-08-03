@@ -13,9 +13,9 @@ Final class Categoria
      $this->conexao = Banco::conecta();   
     }
 
-    public function listar()
+    public function listar():array
     {
-        $sql = "SELECT id, nome FROM categorias order by nome";
+        $sql = "SELECT id, nome FROM categorias ORDER BY nome";
 
         try {
             $consulta = $this->conexao->prepare($sql);
@@ -27,7 +27,7 @@ Final class Categoria
         return $resultado;
     }
 
-    public function inserir()
+    public function inserir():void
     {
      $sql = "INSERT INTO categorias(nome) VALUES (:nome)";
 
@@ -40,7 +40,7 @@ Final class Categoria
      }
     }
 
-    public function listaUm()
+    public function listaUm():array
     {
         $sql = "SELECT * FROM categorias WHERE id =:id";
 
@@ -55,7 +55,7 @@ Final class Categoria
         return $resultado;
     }
 
-    public function atualizar()
+    public function atualizar():void
     {
         $sql = "UPDATE categorias SET nome = :nome WHERE id =:id";
 
@@ -69,7 +69,7 @@ Final class Categoria
         }
     }
 
-    public function excluir()
+    public function excluir():void
     {
         $sql = "DELETE FROM categorias WHERE id = :id";
 
