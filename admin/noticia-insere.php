@@ -1,24 +1,36 @@
 <?php
+
 use Microblog\Categoria;
 use Microblog\Noticia;
 use Microblog\Utilitarios;
+
 require_once "../inc/cabecalho-admin.php";
 $categoria = new Categoria;
 $listaDeCategoria = $categoria->listar();
 // Utilitarios::dump($listaDeCategoria); TESTE
-if(isset($_POST['inserir'])){
+if (isset($_POST['inserir'])) {
 	$noticia = new Noticia;
 	$noticia->setTitulo($_POST['titulo']);
 	$noticia->setTexto($_POST['texto']);
 	$noticia->setResumo($_POST['resumo']);
 	$noticia->setDestaque($_POST['destaque']);
 	$noticia->setCategoriaId($_POST['categoria']);
-	$noticia->setImagem($_POST['imagem']);
+
+	// Capturando os dados do arquivo enviado
+	$imagem = $_FILES["imagem"];
+
+	//  Funcão upload (responsável por pegar o arquivdo inteiro e enviar para o HD do servidor)
+	$noticia->upload($imagem);
+
+	// Enviamos para o setter (e para o banco) SOMENTE a parte que se refere ao nome/extensão do arquivo
+	$noticia->setImagem($imagem['name']);
+
+	
+	Utilitarios::dump($imagem); // Teste
+
 
 	/* Aplicamos o id do usuario logado na sessão à propriedade id da classe/objeto Usuario*/
 	$noticia->usuario->setId($_SESSION['id']);
-
-	Utilitarios::dump($noticia);
 }
 ?>
 <div class="row">
@@ -28,16 +40,11 @@ if(isset($_POST['inserir'])){
 			Inserir nova notícia
 		</h2>
 
-		<form class="mx-auto w-75" action="" method="post" id="form-inserir" name="form-inserir">
+		<form enctype="multipart/form-data" class="mx-auto w-75" action="" method="post" id="form-inserir" name="form-inserir">
 
 			<div class="mb-3">
 				<label class="form-label" for="categoria">Categoria:</label>
 				<select class="form-select" name="categoria" id="categoria" required>
-
-					<!-- <option value=""></option>
-					<option value="1">Ciência</option>
-					<option value="2">Educação</option>
-					<option value="3">Tecnologia</option> -->
 
 					<option value=""></option>
 					<?php foreach ($listaDeCategoria as $categoria) { ?>
