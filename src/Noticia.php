@@ -1,7 +1,11 @@
 <?php
+
 namespace Microblog;
+
 use PDO, Exception;
-final class Noticia {
+
+final class Noticia
+{
     private int $id;
     private string $data;
     private string $titulo;
@@ -10,12 +14,12 @@ final class Noticia {
     private string $imagem;
     private string $destaque;
     private int $categoriaId;
-    
+
     /* Criando uma propriedade do tipo Usuario, ou seja, apartir da classe que criamos com o objetivo de reutilizar recursos dela.
 
-    Isso permitirá fazer uma ASSOCIAÇÃO entre classes */  
+    Isso permitirá fazer uma ASSOCIAÇÃO entre classes */
     public Usuario $usuario;
-    
+
     private PDO $conexao;
 
     public function __construct()
@@ -27,7 +31,7 @@ final class Noticia {
         $this->conexao = $this->usuario->getConexao();
     }
 
-    public function inserir():void
+    public function inserir(): void
     {
         $sql = "INSERT INTO noticias(titulo, texto, resumo, imagem, destaque, categoria_id, usuario_id) VALUES (:titulo, :texto, :resumo, :imagem, :destaque, :categoria_id, :usuario_id)";
 
@@ -44,59 +48,81 @@ final class Noticia {
             $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
-
-       
     }
 
     public function upload(array $arquivo)
-        {   
-            // Definindo os formatos aceitos
-            $tiposValidos = [
-                "image/png",
-                "image/jpeg",
-                "image/gif",
-                "image/svg+xml"
-            ];
+    {
+        // Definindo os formatos aceitos
+        $tiposValidos = [
+            "image/png",
+            "image/jpeg",
+            "image/gif",
+            "image/svg+xml"
+        ];
 
-            if( !in_array($arquivo['type'], $tiposValidos) ){
-                die("<script>
+        if (!in_array($arquivo['type'], $tiposValidos)) {
+            die("<script>
                 alert('Formato inválido!');
                 history.back();
                 </script>");
-            } /* else {
+        } /* else {
                 die("<script>
                 alert('Formato válido');
                 history.back();
                 </script>");
             } */
 
-            // Acessando apenas o nome do arquivo
-            $nome = $arquivo['name'];
+        // Acessando apenas o nome do arquivo
+        $nome = $arquivo['name'];
 
-            // Acessando os dados de acesso temporário
-            $temporario = $arquivo['tmp_name'];
+        // Acessando os dados de acesso temporário
+        $temporario = $arquivo['tmp_name'];
 
-            // Definindo a pasta de destino junto com o nome do arquivo
-            $destino = "../imagem/".$nome;
+        // Definindo a pasta de destino junto com o nome do arquivo
+        $destino = "../imagem/" . $nome;
 
-            // Usamos a função abaixo para pegar da área temporária 
-            // e enviar para a pasta de destino (com o nome do arquivo)
-            move_uploaded_file($temporario, $destino);
-        }
+        // Usamos a função abaixo para pegar da área temporária 
+        // e enviar para a pasta de destino (com o nome do arquivo)
+        move_uploaded_file($temporario, $destino);
+    }
 
-        public function listar():array
-        {
-            // Se o tipo de usuário logado for admin
-         if( $this->usuario->getTipo() === 'admin'){
+    public function listar():array
+    {
+        // Se o tipo de usuário logado for admin
+        if ($this->usuario->getTipo() === 'admin') {
             // então ele poderá acessar as notícias de todo mundo
-            $sql = "";
-         } else {
+            $sql = "SELECT
+                    noticias.id, noticias.titulo,
+                    noticias.data, noticias.destaque,
+                    usuarios.nome AS autor
+                    FROM noticias LEFT JOIN usuarios   
+                    ON noticias.usuario_id = usuarios.id
+                    ORDER BY data DESC";
+        } else {
             // Senão (ou seja, é um editor), este usuário (editor) poderá acessar SOMENTE suas próprias notícias.
-            $sql = "";
-         }
+            $sql = "SELECT id, titulo, data, destaque
+            FROM noticias WHERE usuario_id = :usuario_id
+            ORDER BY data DESC";
         }
+
+        try {
+            $consulta = $this->conexao->prepare($sql);
+
+            /* Se NÃO FOR um usuário admin, então trate o parâmetro de usuario_id antes de executar */
+            if($this->usuario->getTipo() !== 'admin'){
+                $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
+
+            }
+            $consulta->execute();
+            $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $erro) {
+            die("Erro ". $erro->getMessage());
+        }
+        return $resultado;
+        
+    }
 
     public function getId(): int
     {
@@ -155,7 +181,8 @@ final class Noticia {
 
     public function setTexto(string $texto)
     {
-        $this->texto = filter_var($texto, FILTER_SANITIZE_SPECIAL_CHARS);    }
+        $this->texto = filter_var($texto, FILTER_SANITIZE_SPECIAL_CHARS);
+    }
 
     public function setResumo(string $resumo)
     {
