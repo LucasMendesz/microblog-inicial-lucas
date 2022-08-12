@@ -2,6 +2,11 @@
 namespace Microblog;
 abstract class Utilitarios{
 
+   public static function limiteCaracter($dados)
+   {
+      return mb_strimwidth($dados, 0, 20, " ...");
+   }
+
    public static function dump($dados){
       echo "<pre>";
       var_dump($dados);

@@ -34,7 +34,7 @@ $listaDeNoticias = $noticia->listar();
 					<?php if($_SESSION['tipo'] == 'admin') { ?>	
                         <th>Autor</th>
 						<?php } ?>
-
+                         <th class="text-center">Destaque</th>
 						<th class="text-center"colspan="2">Operações</th>
 					</tr>
 				</thead>
@@ -56,12 +56,20 @@ $listaDeNoticias = $noticia->listar();
                     <?php 
 					if($_SESSION['tipo'] == 'admin') { ?>
 
-                        <td> 
+                       
 							<!--?? Operador de coalescência Nula:
 						Na prática, o valor à esquerda é exibido (desde que ele exista), caso contrário o valor à direita é exibido -->
-							 <?=$noticia['autor'] ?? "<i>Equipe Microblog</i>"?> 
-						</td>
-						<?php } ?>
+						<?php 
+						if ( $noticia['autor'] ) {
+							?><td><?=Utilitarios::limiteCaracter($noticia['autor'])?></td> <?php
+						} else {
+							?> <td>Equipe Microblog</td> <?php
+							}
+						}
+							?>
+						
+
+						<td><?=$noticia['destaque']?></td>
 
 						<td class="text-center">
 							<a class="btn btn-warning" 
@@ -69,6 +77,7 @@ $listaDeNoticias = $noticia->listar();
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
 						</td>
+
 						<td>
 							<a class="btn btn-danger excluir" 
 							href="noticia-exclui.php?id=<?=$noticia['id']?>">
