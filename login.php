@@ -79,8 +79,7 @@ if(isset($_GET['acesso_proibido'])) {
 			}
 			?>
     </div>
-</div>        
-<?php 
-require_once "inc/rodape.php";
-?>
+</div>
+<?php include_once "inc/todas.php"; ?>
 
+<?php require_once "inc/rodape.php"; ?>
