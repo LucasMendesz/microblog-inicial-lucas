@@ -13,7 +13,9 @@ final class Noticia
     private string $resumo;
     private string $imagem;
     private string $destaque;
+    private string $termo;
     private int $categoriaId;
+
 
     /* Criando uma propriedade do tipo Usuario, ou seja, apartir da classe que criamos com o objetivo de reutilizar recursos dela.
 
@@ -88,7 +90,7 @@ final class Noticia
         move_uploaded_file($temporario, $destino);
     }
 
-    public function listar():array
+    public function listar(): array
     {
         // Se o tipo de usuário logado for admin
         if ($this->usuario->getTipo() === 'admin') {
@@ -111,20 +113,18 @@ final class Noticia
             $consulta = $this->conexao->prepare($sql);
 
             /* Se NÃO FOR um usuário admin, então trate o parâmetro de usuario_id antes de executar */
-            if($this->usuario->getTipo() !== 'admin'){
+            if ($this->usuario->getTipo() !== 'admin') {
                 $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
-
             }
             $consulta->execute();
             $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
-        
     }
 
-    public function listarUm():array
+    public function listarUm(): array
     {
         if ($this->usuario->getTipo() === 'admin') {
             $sql = "SELECT titulo, texto, resumo, imagem, usuario_id, categoria_id, destaque FROM noticias WHERE id = :id";
@@ -135,22 +135,22 @@ final class Noticia
         try {
             $consulta = $this->conexao->prepare($sql);
 
-             // Parâmetro id da noticia (usado para todos os usuarios)
-             $consulta->bindParam(":id", $this->id, PDO::PARAM_INT);
-            if($this->usuario->getTipo() !== 'admin'){
+            // Parâmetro id da noticia (usado para todos os usuarios)
+            $consulta->bindParam(":id", $this->id, PDO::PARAM_INT);
+            if ($this->usuario->getTipo() !== 'admin') {
                 // Parâmetro id do usuario_id
                 $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
             }
-             
+
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
-    }   
+    }
 
-    public function atualizar():void
+    public function atualizar(): void
     {
         if ($this->usuario->getTipo() === 'admin') {
             $sql = "UPDATE noticias SET
@@ -163,32 +163,30 @@ final class Noticia
         try {
             $consulta = $this->conexao->prepare($sql);
 
-             // Parâmetro id da noticia (usado para todos os usuarios)
-             $consulta->bindParam(":id", $this->id, PDO::PARAM_INT);
-             $consulta->bindParam(":titulo", $this->titulo, PDO::PARAM_STR);
-             $consulta->bindParam(":texto", $this->texto, PDO::PARAM_STR);
-             $consulta->bindParam(":resumo", $this->resumo, PDO::PARAM_STR);
-             $consulta->bindParam(":imagem", $this->imagem, PDO::PARAM_STR);
-             $consulta->bindParam(":destaque", $this->destaque, PDO::PARAM_STR);
-             $consulta->bindParam(":categoria_id", $this->categoriaId, PDO::PARAM_INT);
+            // Parâmetro id da noticia (usado para todos os usuarios)
+            $consulta->bindParam(":id", $this->id, PDO::PARAM_INT);
+            $consulta->bindParam(":titulo", $this->titulo, PDO::PARAM_STR);
+            $consulta->bindParam(":texto", $this->texto, PDO::PARAM_STR);
+            $consulta->bindParam(":resumo", $this->resumo, PDO::PARAM_STR);
+            $consulta->bindParam(":imagem", $this->imagem, PDO::PARAM_STR);
+            $consulta->bindParam(":destaque", $this->destaque, PDO::PARAM_STR);
+            $consulta->bindParam(":categoria_id", $this->categoriaId, PDO::PARAM_INT);
 
-            if($this->usuario->getTipo() !== 'admin'){
+            if ($this->usuario->getTipo() !== 'admin') {
 
                 // Parâmetro id do usuario_id
                 $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
             }
             $consulta->execute();
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
-    } 
-    
-    public function excluir():void
-    { 
-        if ($this->usuario->getTipo() === 'admin') { 
-           $sql = "DELETE FROM noticias WHERE id = :id";
+    }
 
-
+    public function excluir(): void
+    {
+        if ($this->usuario->getTipo() === 'admin') {
+            $sql = "DELETE FROM noticias WHERE id = :id";
         } else {
             $sql = "DELETE FROM noticias WHERE id = :id AND usuario_id = :usuario_id";
         }
@@ -197,19 +195,19 @@ final class Noticia
             $consulta = $this->conexao->prepare($sql);
             $consulta->bindParam(":id", $this->id, PDO::PARAM_INT);
 
-            if($this->usuario->getTipo() !== 'admin'){
+            if ($this->usuario->getTipo() !== 'admin') {
 
                 // Parâmetro id do usuario_id
                 $consulta->bindValue(":usuario_id", $this->usuario->getId(), PDO::PARAM_INT);
             }
             $consulta->execute();
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
     }
 
     // Métodos para área pública do site
-    public function listarDestaques():array
+    public function listarDestaques(): array
     {
         $sql = "SELECT titulo, imagem, resumo, id FROM noticias WHERE destaque = :destaque ORDER BY data DESC";
 
@@ -219,12 +217,12 @@ final class Noticia
             $consulta->execute();
             $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
     }
-    
-    public function listarTodas():array
+
+    public function listarTodas(): array
     {
         $sql = "SELECT data, titulo, resumo, id FROM noticias ORDER BY data DESC";
 
@@ -233,17 +231,17 @@ final class Noticia
             $consulta->execute();
             $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
     }
 
-    public function listarDetalhes():array
+    public function listarDetalhes(): array
     {
         $sql = "SELECT 
         noticias.id, noticias.titulo,
         noticias.texto, noticias.data,
-        noticias.imagem, usuarios. nome AS autor
+        noticias.imagem, usuarios.nome AS autor
         FROM noticias LEFT JOIN usuarios
         ON noticias.usuario_id = usuarios.id WHERE noticias.id = :id";
 
@@ -253,29 +251,50 @@ final class Noticia
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
     }
 
 
-    public function listarPorCategoria():array
+    public function listarPorCategoria(): array
     {
         $sql = "SELECT 
         noticias.id, noticias.titulo,
         noticias.texto, noticias.data,
+        noticias.resumo,
         noticias.imagem, usuarios.nome AS autor, categorias.nome AS categoria
         FROM noticias
         LEFT JOIN usuarios ON noticias.usuario_id = usuarios.id
-        INNER JOIN categorias ON noticias.categoria_id = categorias.id WHERE noticias.categoria_id = :categoria_id"; 
+        INNER JOIN categorias ON noticias.categoria_id = categorias.id WHERE noticias.categoria_id = :categoria_id";
 
         try {
             $consulta = $this->conexao->prepare($sql);
             $consulta->bindParam(":categoria_id", $this->categoriaId, PDO::PARAM_INT);
             $consulta->execute();
-            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+            $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $erro) {
-            die("Erro ". $erro->getMessage());
+            die("Erro " . $erro->getMessage());
+        }
+        return $resultado;
+    }
+
+    public function busca(): array
+    {
+        $sql = "SELECT titulo, data, resumo , id FROM noticias 
+        WHERE 
+        titulo LIKE :termo OR
+        texto LIKE :termo OR
+        resumo LIKE :termo
+        ORDER BY data DESC";
+
+        try {
+            $consulta = $this->conexao->prepare($sql);
+            $consulta->bindValue(":termo", '%'.$this->termo.'%', PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $erro) {
+            die("Erro " . $erro->getMessage());
         }
         return $resultado;
     }
@@ -320,6 +339,11 @@ final class Noticia
         return $this->categoriaId;
     }
 
+    public function getTermo(): string
+    {
+        return $this->termo;
+    }
+
     public function setId(int $id)
     {
         $this->id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
@@ -358,5 +382,10 @@ final class Noticia
     public function setCategoriaId(int $categoriaId)
     {
         $this->categoriaId = filter_var($categoriaId, FILTER_SANITIZE_NUMBER_INT);
+    }
+
+    public function setTermo(string $termo)
+    {
+        $this->termo = filter_var($termo, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 }

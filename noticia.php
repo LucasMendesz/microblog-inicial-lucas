@@ -1,14 +1,9 @@
 <?php
-use Microblog\Noticia;
 use Microblog\Utilitarios;
-
 require_once "inc/cabecalho.php";
-$noticia = new Noticia;
 $noticia->setId($_GET['id']);
 $detalhes = $noticia->listarDetalhes();
 ?>
-
-
 <div class="row my-1 mx-md-n1">
 
     <article class="col-12">
